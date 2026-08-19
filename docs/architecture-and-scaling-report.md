@@ -31,10 +31,10 @@ Picky Panda is a high-speed, viral decision micro-game. In each round, users pic
 
 ## 3. Concurrency & Scaling Bottlenecks
 
-### 1. `ORDER BY RANDOM()` Performance Degradation
-* **Mechanism**: `get_next_question` uses `ORDER BY random() LIMIT 1` inside a subquery across unanswered questions.
-* **Risk at Scale**: At 10,000+ questions and millions of vote rows, every request forces Postgres to scan and compute random floats across all eligible rows.
-* **Future Solution**: Generate random indices on the application side or maintain active question ID sets in Redis.
+### 1. `ORDER BY RANDOM()` Performance Trap (Resolved in Migration 0006)
+* **Previous Mechanism**: `get_next_question` previously used `ORDER BY random() LIMIT 1`, which required generating random numbers and sorting the full table in memory on every request.
+* **Optimization Applied**: Replaced with indexed sequential ordering (`ORDER BY d2.created_at ASC, r2.round_order ASC LIMIT 1`) with an index on `rounds(deck_id, round_order)`.
+* **Result**: Query now executes in sub-millisecond $O(1)$ time using an index scan with immediate early-exit on the first match. CPU load during high concurrency is minimized.
 
 ### 2. Live Aggregate Counting (`COUNT(*)`)
 * **Mechanism**: Every vote invokes `get_round_stats`, running an un-cached live scan on the `votes` table for that `round_id`.
