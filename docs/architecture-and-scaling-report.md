@@ -8,24 +8,28 @@ Picky Panda is a high-speed, viral decision micro-game. In each round, users pic
 ## 2. Issues Encountered & Solutions Applied
 
 ### Bug #1: Race Condition on Fresh Question Percentage Calculation
+* **Status**: **FIXED**
+* **Fix Summary**: Awaited `submitVote()` in `GameRunner.tsx` before invoking `getRoundStats()`, ensuring the write transaction commits to PostgreSQL before aggregate stats are fetched.
 * **Description**: For newly-seeded questions with 0 prior votes, clicking an option displayed `0%, 0%, 0%` instead of `100%` on the chosen option.
 * **Root Cause**: `submitVote()` was fired asynchronously without `await`, causing `getRoundStats()` to query PostgreSQL before the insert transaction finished committing.
-* **Solution**: Awaited `submitVote()` before triggering `getRoundStats()` in `GameRunner.tsx`.
 
 ### Bug #2: PostgREST 401/42501 RLS Permission Error with `.upsert()`
+* **Status**: **FIXED**
+* **Fix Summary**: Reverted to standard `.insert()` in `lib/game.ts` and silently suppressed PostgreSQL error code `23505` (`unique_violation`). This maintains strict append-only security (no `UPDATE` policy needed or permitted) while handling duplicate clicks cleanly.
 * **Description**: Switching to `.upsert()` to handle duplicate votes caused Supabase to return `401 / 42501 (Unauthorized: new row violates row-level security policy)`.
-* **Root Cause**: `.upsert()` requires both `INSERT` and `UPDATE` permissions in PostgreSQL RLS, whereas our policy was scoped strictly to `FOR INSERT`.
-* **Solution**: Reverted to standard `.insert()` and added silent suppression for error code `23505` (`unique_violation`).
+* **Root Cause**: `.upsert()` requires both `INSERT` and `UPDATE` permissions in PostgreSQL RLS, whereas our policy is scoped strictly to `FOR INSERT`.
 
 ### Bug #3: Missing Zero-Vote Options in RPC Aggregates
+* **Status**: **FIXED**
+* **Fix Summary**: Added client-side normalization in `lib/game.ts` to guarantee that all option IDs of a question always receive a default `{ votes: 0, pct: 0 }` even when omitted from the SQL `GROUP BY` response.
 * **Description**: Options with 0 votes were omitted from the `get_round_stats` RPC response, causing option cards to show blank bars instead of `0%`.
 * **Root Cause**: The SQL query grouped strictly over existing vote rows (`WHERE round_id = r_id GROUP BY option_id`).
-* **Solution**: Added client-side normalization in `lib/game.ts` to guarantee that all option IDs of a question always receive a default `{ votes: 0, pct: 0 }`.
 
 ### Bug #4: Replay Session Stagnation
+* **Status**: **FIXED**
+* **Fix Summary**: Implemented `resetSessionId()` in `lib/session.ts` to refresh the anonymous session ID in `localStorage` upon restarting the game.
 * **Description**: Replaying a deck caused all votes on the second run to be dropped by the `UNIQUE(round_id, session_id)` constraint, resulting in 0% stats.
 * **Root Cause**: The anonymous `session_id` in `localStorage` was persisted across replays.
-* **Solution**: Implemented `resetSessionId()` in `lib/session.ts` to refresh the session ID upon restarting.
 
 ---
 

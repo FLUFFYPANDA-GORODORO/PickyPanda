@@ -2,41 +2,10 @@
 @import "tailwindcss";
 
 :root {
-  /* Core palette — dark-first */
-  --bg-primary: #0c0c14;
-  --bg-secondary: #14141f;
-  --bg-card: #1a1a2e;
-  --bg-card-hover: #22223a;
-
-  --text-primary: #f0f0f5;
-  --text-secondary: #9898b0;
-  --text-muted: #5a5a78;
-
-  /* Option accent colors */
-  --option-a: #ff6b8a;
-  --option-a-glow: rgba(255, 107, 138, 0.25);
-  --option-a-soft: rgba(255, 107, 138, 0.12);
-
-  --option-b: #4ecafc;
-  --option-b-glow: rgba(78, 202, 252, 0.25);
-  --option-b-soft: rgba(78, 202, 252, 0.12);
-
-  --option-c: #6ee7a0;
-  --option-c-glow: rgba(110, 231, 160, 0.25);
-  --option-c-soft: rgba(110, 231, 160, 0.12);
-
-  /* UI accents */
-  --accent-primary: #a78bfa;
-  --accent-primary-glow: rgba(167, 139, 250, 0.3);
-
-  /* Borders */
-  --border-subtle: rgba(255, 255, 255, 0.06);
-  --border-option: rgba(255, 255, 255, 0.1);
-
-  /* Transitions */
-  --transition-fast: 150ms cubic-bezier(0.4, 0, 0.2, 1);
-  --transition-normal: 250ms cubic-bezier(0.4, 0, 0.2, 1);
-  --transition-smooth: 400ms cubic-bezier(0.16, 1, 0.3, 1);
+  --bg-primary: #08080e;
+  --text-primary: #ffffff;
+  --text-secondary: #a0a0b8;
+  --text-muted: #55556a;
 }
 
 @theme inline {
@@ -47,29 +16,27 @@
 
 * {
   -webkit-tap-highlight-color: transparent;
+  box-sizing: border-box;
 }
 
-body {
+html, body {
   background: var(--bg-primary);
   color: var(--text-primary);
   font-family: 'Outfit', system-ui, sans-serif;
-  overflow-x: hidden;
+  overflow: hidden;
+  height: 100%;
+  width: 100%;
 }
 
-/* ===== Animations ===== */
-
-@keyframes fillBar {
-  from { width: 0%; }
-}
-
-@keyframes fadeInUp {
+/* Animations */
+@keyframes scaleIn {
   from {
     opacity: 0;
-    transform: translateY(16px);
+    transform: scale(0.96);
   }
   to {
     opacity: 1;
-    transform: translateY(0);
+    transform: scale(1);
   }
 }
 
@@ -78,103 +45,25 @@ body {
   to { opacity: 1; }
 }
 
-@keyframes scaleIn {
+@keyframes circleDrain {
   from {
-    opacity: 0;
-    transform: scale(0.92);
+    stroke-dashoffset: 0;
   }
   to {
-    opacity: 1;
-    transform: scale(1);
+    stroke-dashoffset: 100;
   }
-}
-
-@keyframes slideInFromBottom {
-  from {
-    opacity: 0;
-    transform: translateY(40px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-@keyframes pulse-glow {
-  0%, 100% { box-shadow: 0 0 20px var(--accent-primary-glow); }
-  50% { box-shadow: 0 0 40px var(--accent-primary-glow); }
-}
-
-@keyframes shimmer {
-  0% { background-position: -200% 0; }
-  100% { background-position: 200% 0; }
-}
-
-@keyframes countUp {
-  from { opacity: 0; transform: scale(0.5); }
-  to { opacity: 1; transform: scale(1); }
-}
-
-/* ===== Utility classes ===== */
-
-.animate-fade-in-up {
-  animation: fadeInUp 0.5s var(--transition-smooth) both;
-}
-
-.animate-fade-in {
-  animation: fadeIn 0.3s ease both;
 }
 
 .animate-scale-in {
-  animation: scaleIn 0.4s var(--transition-smooth) both;
+  animation: scaleIn 0.35s cubic-bezier(0.16, 1, 0.3, 1) both;
 }
 
-.animate-slide-in-bottom {
-  animation: slideInFromBottom 0.6s var(--transition-smooth) both;
+.animate-fade-in {
+  animation: fadeIn 0.4s cubic-bezier(0.16, 1, 0.3, 1) both;
 }
 
-/* Stagger children */
-.stagger-1 { animation-delay: 0ms; }
-.stagger-2 { animation-delay: 80ms; }
-.stagger-3 { animation-delay: 160ms; }
-
-/* Percentage bar fill animation */
-.bar-fill {
-  animation: fillBar 0.6s cubic-bezier(0.16, 1, 0.3, 1) both;
-  animation-delay: 100ms;
-}
-
-/* Loading skeleton shimmer */
-.skeleton {
-  background: linear-gradient(
-    90deg,
-    var(--bg-card) 25%,
-    var(--bg-card-hover) 50%,
-    var(--bg-card) 75%
-  );
-  background-size: 200% 100%;
-  animation: shimmer 1.5s infinite;
-}
-
-/* Progress dots */
-.dot {
-  width: 8px;
-  height: 8px;
-  border-radius: 50%;
-  background: var(--text-muted);
-  transition: all var(--transition-normal);
-}
-.dot.active {
-  background: var(--accent-primary);
-  box-shadow: 0 0 8px var(--accent-primary-glow);
-  width: 24px;
-  border-radius: 4px;
-}
-.dot.completed {
-  background: var(--text-secondary);
-}
-
-/* Toast notification */
-.toast {
-  animation: fadeInUp 0.3s ease both;
+.countdown-circle {
+  stroke-dasharray: 100;
+  stroke-dashoffset: 0;
+  animation: circleDrain 2.2s linear forwards;
 }
