@@ -9,12 +9,20 @@ const outfit = Outfit({
 });
 
 export const metadata: Metadata = {
-  title: "Picky Panda 🐼 — Keep One",
+  title: "PickyPanda - Keep One",
   description:
     "Pick your favorites and see how you compare with the crowd. A fast, fun decision game.",
+  icons: {
+    icon: [
+      { url: "/faviconpanda.png", type: "image/png" },
+      { url: "/favicon.ico" },
+    ],
+    shortcut: "/faviconpanda.png",
+    apple: "/faviconpanda.png",
+  },
 };
 
-export default function RootLayout({ children }: LayoutProps<"/">) {
+export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en" className={`${outfit.variable} h-full antialiased`}>
       <body className="min-h-full flex flex-col">{children}</body>

@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect, useCallback, useRef } from "react";
+import Image from "next/image";
 import type { Question, RoundStat } from "@/lib/types";
 import { submitVote, getRoundStats, getNextQuestion } from "@/lib/game";
 import { getSessionId } from "@/lib/session";
@@ -95,23 +96,28 @@ export default function GameRunner() {
 
   return (
     <div className="relative w-screen h-screen overflow-hidden bg-[#001A23] select-none flex flex-col">
-      {/* Top Left Overlay: Clean Brand Typography (No Emoji) */}
-      <div className="absolute top-4 sm:top-6 left-4 sm:left-6 z-20 pointer-events-none drop-shadow-md">
-        <span className="text-xl sm:text-2xl font-black tracking-tight text-[#E8F1F2]/90">
-          PickyPanda
-        </span>
+      {/* Top Left Overlay: Logo Image positioned directly over first card */}
+      <div className="absolute top-4 sm:top-6 left-4 sm:left-6 z-30 pointer-events-none drop-shadow-sm">
+        <Image
+          src="/pandalogo.png"
+          alt="PickyPanda"
+          width={280}
+          height={84}
+          className="h-16 sm:h-20 md:h-24 w-auto object-contain"
+          priority
+        />
       </div>
 
       {/* Top Right Overlay: Small Clean Share Icon Button */}
-      <div className="absolute top-4 sm:top-6 right-4 sm:right-6 z-20">
+      <div className="absolute top-4 sm:top-6 right-4 sm:right-6 z-30">
         <button
           id="share-icon-btn"
           onClick={() => setIsShareOpen(true)}
           aria-label="Share PickyPanda"
-          className="w-9 h-9 sm:w-10 sm:h-10 rounded-md bg-[#001A23]/60 hover:bg-[#001A23]/90 backdrop-blur-md border border-[#B3EFB2]/20 flex items-center justify-center text-[#E8F1F2] transition-all cursor-pointer hover:scale-105 active:scale-95 shadow-lg"
+          className="w-8 h-8 sm:w-9 sm:h-9 rounded-md bg-[#001A23]/60 hover:bg-[#001A23]/90 backdrop-blur-md border border-[#B3EFB2]/20 flex items-center justify-center text-[#E8F1F2] transition-all cursor-pointer hover:scale-105 active:scale-95 shadow-lg"
         >
           <svg
-            className="w-4 h-4 sm:w-4.5 sm:h-4.5"
+            className="w-3.5 h-3.5 sm:w-4 sm:h-4"
             fill="none"
             viewBox="0 0 24 24"
             stroke="currentColor"
@@ -128,8 +134,8 @@ export default function GameRunner() {
 
       {/* Bottom Right Overlay: Circular Countdown Loader */}
       {phase === "revealing" && (
-        <div className="absolute bottom-5 sm:bottom-7 right-5 sm:right-7 z-20 pointer-events-none animate-fade-in">
-          <div className="relative w-9 h-9 sm:w-10 sm:h-10 flex items-center justify-center">
+        <div className="absolute bottom-4 sm:bottom-6 right-4 sm:right-6 z-30 pointer-events-none animate-fade-in">
+          <div className="relative w-8 h-8 sm:w-9 sm:h-9 flex items-center justify-center">
             {/* Background ring */}
             <svg className="w-full h-full -rotate-90" viewBox="0 0 36 36">
               <path
@@ -156,9 +162,9 @@ export default function GameRunner() {
       {/* Main Full-Screen Area */}
       <main className="flex-1 w-full h-full flex items-stretch relative overflow-hidden">
         {phase === "loading" && (
-          <div className="flex-1 flex flex-col items-center justify-center">
-            <div className="text-5xl animate-bounce mb-3">🐼</div>
-            <p className="text-sm font-semibold text-[#E8F1F2]/70">Loading...</p>
+          <div className="flex-1 flex flex-col items-center justify-center gap-2">
+            <div className="w-6 h-6 border-2 border-[#B3EFB2] border-t-transparent rounded-full animate-spin" />
+            <p className="text-xs font-semibold tracking-wider uppercase text-[#E8F1F2]/60">Loading</p>
           </div>
         )}
 

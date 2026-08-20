@@ -12,31 +12,28 @@ interface OptionButtonProps {
   onClick: () => void;
 }
 
-// Custom theme palette matching:
-// #001A23 (Obsidian Navy)
-// #B3EFB2 (Mint Sage)
-// #E8F1F2 (Ice White)
+// Custom theme palette (White first, Mint second, Dark Obsidian third):
 const CARD_THEMES = [
   {
-    // Option 1: Deep Obsidian with Mint/Ice highlights
-    bg: "linear-gradient(160deg, #001A23 0%, #032b3a 60%, #001a23 100%)",
-    textColor: "#E8F1F2",
-    accentColor: "#B3EFB2",
-    glow: "rgba(179, 239, 178, 0.25)",
+    // Option 1 (First Card): Clean Ice White Card
+    bg: "linear-gradient(160deg, #E8F1F2 0%, #d8e6e8 60%, #e2ecee 100%)",
+    textColor: "#001A23",
+    accentColor: "#001A23",
+    glow: "rgba(232, 241, 242, 0.35)",
   },
   {
-    // Option 2: Vibrant Mint Sage Card
+    // Option 2 (Second Card): Vibrant Mint Sage Card
     bg: "linear-gradient(160deg, #B3EFB2 0%, #9be29a 60%, #a4e8a3 100%)",
     textColor: "#001A23",
     accentColor: "#001A23",
     glow: "rgba(179, 239, 178, 0.4)",
   },
   {
-    // Option 3: Clean Ice White Card
-    bg: "linear-gradient(160deg, #E8F1F2 0%, #d8e6e8 60%, #e2ecee 100%)",
-    textColor: "#001A23",
-    accentColor: "#001A23",
-    glow: "rgba(232, 241, 242, 0.35)",
+    // Option 3 (Third Card): Deep Obsidian Navy Card
+    bg: "linear-gradient(160deg, #001A23 0%, #032b3a 60%, #001a23 100%)",
+    textColor: "#E8F1F2",
+    accentColor: "#B3EFB2",
+    glow: "rgba(179, 239, 178, 0.25)",
   },
 ];
 
@@ -79,7 +76,6 @@ export default function OptionButton({
         }
       };
 
-      // Slight initial delay so transition feels natural
       const timeout = setTimeout(() => {
         animRef.current = requestAnimationFrame(animate);
       }, 150);
